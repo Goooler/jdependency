@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
-import org.objectweb.asm.ClassReader;
 import org.vafer.jdependency.asm.DependenciesClassAdapter;
 
 /**
@@ -70,7 +69,7 @@ public final class DependencyUtils {
 
     public static Set<String> getDependenciesOfClass( final InputStream pInputStream ) throws IOException {
         final DependenciesClassAdapter v = new DependenciesClassAdapter();
-        new ClassReader( pInputStream ).accept( v, ClassReader.EXPAND_FRAMES );
+        v.accept(pInputStream.readAllBytes());
         final Set<String> depNames = v.getDependencies();
         return depNames;
     }

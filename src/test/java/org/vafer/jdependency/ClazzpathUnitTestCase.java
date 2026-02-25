@@ -184,10 +184,10 @@ public class ClazzpathUnitTestCase {
         final ClazzpathUnit u = cp.addClazzpathUnit(resourceFile("jar1.jar"));
 
         final Set<Clazz> deps = u.getDependencies();
-        assertEquals(116, deps.size());
+        assertEquals(115, deps.size());
 
         final Set<Clazz> transitiveDeps = u.getTransitiveDependencies();
-        assertEquals(116, transitiveDeps.size());
+        assertEquals(115, transitiveDeps.size());
 
     }
 

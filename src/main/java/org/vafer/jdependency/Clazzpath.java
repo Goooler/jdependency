@@ -31,8 +31,6 @@ import java.security.MessageDigest;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 
-import org.apache.commons.io.input.MessageDigestInputStream;
-import org.objectweb.asm.ClassReader;
 import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
 
@@ -165,16 +163,15 @@ public final class Clazzpath {
             // extract dependencies of clazz
             InputStream inputStream = resource.getInputStream();
             try {
-                final MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                final  MessageDigestInputStream calculatingInputStream =
-                        MessageDigestInputStream.builder().setInputStream(inputStream).setMessageDigest(digest).get();
+                final byte[] classBytes = inputStream.readAllBytes();
 
+                final MessageDigest digest = MessageDigest.getInstance("SHA-256");
                 if (versions) {
-                    inputStream = calculatingInputStream;
+                    digest.update(classBytes);
                 }
 
                 final DependenciesClassAdapter v = new DependenciesClassAdapter();
-                new ClassReader(inputStream).accept(v, ClassReader.EXPAND_FRAMES | ClassReader.SKIP_DEBUG);
+                v.accept(classBytes);
 
                 // get or create clazz
                 final String clazzName = resource.name;
